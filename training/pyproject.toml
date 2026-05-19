@@ -16,18 +16,14 @@ dependencies = [
 ]
 
 [tool.uv]
-dev-dependencies = [
-    "ruff>=0.9",
-]
+dev-dependencies = ["ruff>=0.9"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py313"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]  # pycodestyle, pyflakes, isort
-ignore = ["E501"]          # largo de línea no crítico en notebooks
+select = ["E", "F", "I"] # pycodestyle, pyflakes, isort
+ignore = ["E501"]
 
 [tool.ruff.format]
-# habilita formato de celdas .ipynb
-

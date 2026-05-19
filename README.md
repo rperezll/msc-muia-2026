@@ -4,7 +4,7 @@
 
 ### Descripción
 
-Workflow de monitorización, detección y explicabilidad de anomalías en entornos de producción solar mediante una combinación de Machine Learning clásico y modelos generativos para su aplicación en Edge.
+Workflow de monitorización, detección y explicabilidad de anomalías en entornos de producción solar mediante una combinación de Machine Learning clásico y modelos generativos para su aplicación en el *Edge*.
 
 ## Licencia
 
