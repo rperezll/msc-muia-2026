@@ -1,0 +1,4 @@
+FROM qwen2.5-coder:7b-instruct-q4_K_M
+PARAMETER num_gpu 0
+PARAMETER num_thread 6
+PARAMETER num_ctx 8192
