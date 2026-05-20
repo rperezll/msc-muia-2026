@@ -1,0 +1,322 @@
+{
+  "$defs": {
+    "DetectorConfig": {
+      "properties": {
+        "anomaly_buffer_max": {
+          "default": 10,
+          "minimum": 1,
+          "title": "Anomaly Buffer Max",
+          "type": "integer"
+        },
+        "lstm_threshold_key": {
+          "default": "robust_threshold",
+          "title": "Lstm Threshold Key",
+          "type": "string"
+        }
+      },
+      "title": "DetectorConfig",
+      "type": "object"
+    },
+    "EngineMode": {
+      "enum": [
+        "rlm",
+        "single_pass"
+      ],
+      "title": "EngineMode",
+      "type": "string"
+    },
+    "ExplainerConfig": {
+      "properties": {
+        "engine_mode": {
+          "$ref": "#/$defs/EngineMode",
+          "default": "rlm"
+        },
+        "llm_provider": {
+          "$ref": "#/$defs/LlmProvider"
+        },
+        "api_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key"
+        },
+        "target_model": {
+          "title": "Target Model",
+          "type": "string"
+        },
+        "base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Url"
+        },
+        "runpod_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runpod Url"
+        },
+        "max_iterations": {
+          "default": 10,
+          "minimum": 1,
+          "title": "Max Iterations",
+          "type": "integer"
+        },
+        "temperature": {
+          "default": 0.1,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        }
+      },
+      "required": [
+        "llm_provider",
+        "target_model"
+      ],
+      "title": "ExplainerConfig",
+      "type": "object"
+    },
+    "LlmProvider": {
+      "enum": [
+        "openai",
+        "ollama",
+        "runpod"
+      ],
+      "title": "LlmProvider",
+      "type": "string"
+    },
+    "McpServerConfig": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "embedder_provider": {
+          "$ref": "#/$defs/LlmProvider",
+          "default": "ollama"
+        },
+        "embedder_model": {
+          "default": "nomic-embed-text",
+          "title": "Embedder Model",
+          "type": "string"
+        },
+        "embedder_api_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Embedder Api Key"
+        },
+        "embedder_base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Embedder Base Url"
+        },
+        "lancedb_path": {
+          "default": "data/lancedb",
+          "title": "Lancedb Path",
+          "type": "string"
+        },
+        "rag_top_k": {
+          "default": 5,
+          "minimum": 1,
+          "title": "Rag Top K",
+          "type": "integer"
+        },
+        "host": {
+          "default": "localhost",
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "default": 8000,
+          "title": "Port",
+          "type": "integer"
+        },
+        "chunk_size": {
+          "default": 512,
+          "minimum": 1,
+          "title": "Chunk Size",
+          "type": "integer"
+        },
+        "chunk_overlap": {
+          "default": 64,
+          "minimum": 0,
+          "title": "Chunk Overlap",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "McpServerConfig",
+      "type": "object"
+    },
+    "MqttServiceConfig": {
+      "properties": {
+        "host": {
+          "default": "localhost",
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "default": 1883,
+          "title": "Port",
+          "type": "integer"
+        }
+      },
+      "title": "MqttServiceConfig",
+      "type": "object"
+    },
+    "RabbitMQServiceConfig": {
+      "properties": {
+        "host": {
+          "default": "localhost",
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "default": 5672,
+          "title": "Port",
+          "type": "integer"
+        },
+        "user": {
+          "default": "guest",
+          "title": "User",
+          "type": "string"
+        },
+        "password": {
+          "default": "guest",
+          "title": "Password",
+          "type": "string"
+        }
+      },
+      "title": "RabbitMQServiceConfig",
+      "type": "object"
+    },
+    "ServicesConfig": {
+      "properties": {
+        "mqtt": {
+          "$ref": "#/$defs/MqttServiceConfig"
+        },
+        "rabbitmq": {
+          "$ref": "#/$defs/RabbitMQServiceConfig"
+        }
+      },
+      "title": "ServicesConfig",
+      "type": "object"
+    },
+    "SimulatorConfig": {
+      "properties": {
+        "csv_file_path": {
+          "title": "Csv File Path",
+          "type": "string"
+        },
+        "publish_delay": {
+          "default": 2.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Publish Delay",
+          "type": "number"
+        },
+        "burst_delay": {
+          "default": 0.1,
+          "minimum": 0.0,
+          "title": "Burst Delay",
+          "type": "number"
+        }
+      },
+      "required": [
+        "csv_file_path"
+      ],
+      "title": "SimulatorConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "log_level": {
+      "default": "INFO",
+      "enum": [
+        "DEBUG",
+        "INFO",
+        "WARNING",
+        "ERROR",
+        "CRITICAL"
+      ],
+      "title": "Log Level",
+      "type": "string"
+    },
+    "log_levels": {
+      "additionalProperties": {
+        "enum": [
+          "DEBUG",
+          "INFO",
+          "WARNING",
+          "ERROR",
+          "CRITICAL"
+        ],
+        "type": "string"
+      },
+      "title": "Log Levels",
+      "type": "object"
+    },
+    "services": {
+      "$ref": "#/$defs/ServicesConfig"
+    },
+    "simulator": {
+      "$ref": "#/$defs/SimulatorConfig"
+    },
+    "detector": {
+      "$ref": "#/$defs/DetectorConfig"
+    },
+    "explainer": {
+      "$ref": "#/$defs/ExplainerConfig"
+    },
+    "mcp_servers": {
+      "items": {
+        "$ref": "#/$defs/McpServerConfig"
+      },
+      "title": "Mcp Servers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "services",
+    "simulator",
+    "detector",
+    "explainer",
+    "mcp_servers"
+  ],
+  "title": "AppConfig",
+  "type": "object"
+}

@@ -6,6 +6,7 @@ models/keras/*
 .venv
 .ruff_cache
 __pycache__
+.pytest_cache
 
 .angular
 node_modules
