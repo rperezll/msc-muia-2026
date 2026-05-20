@@ -4,10 +4,10 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [tool.uv.workspace]
-members = ["shared_lib"]
+members = ["shared_lib", "simulator", "test-utils"]
 
-[tool.uv]
-dev-dependencies = ["ruff>=0.11"]
+[dependency-groups]
+dev = ["ruff>=0.11"]
 
 [tool.ruff]
 target-version = "py313"
@@ -28,4 +28,4 @@ select = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["shared_lib", "simulator", "detector", "explainer"]
+known-first-party = ["shared_lib", "simulator", "detector", "explainer", "test_utils"]
