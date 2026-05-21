@@ -4,10 +4,14 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [tool.uv.workspace]
-members = ["shared_lib", "simulator", "test-utils"]
+members = ["shared_lib", "simulator", "test-utils", "detector"]
 
 [dependency-groups]
 dev = ["ruff>=0.11"]
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+norecursedirs = ["simulator", "detector", "shared_lib", "test-utils", ".venv"]
 
 [tool.ruff]
 target-version = "py313"

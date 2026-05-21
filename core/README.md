@@ -28,8 +28,19 @@ docker exec mqtt_broker mosquitto_pub -t simulator/control -m pause
 docker exec mqtt_broker mosquitto_pub -t simulator/control -m stop
 ```
 
+## Detector
+
+```bash
+uv run detector
+```
+
+Requiere los artefactos entrenados en `models/keras/plant_{1,2}/` (`config_solar.json`, `model_lstm_solar.keras`, `model_mlp_head.keras`, `scaler_solar.pkl`).
+
+Consume telemetría de `telemetry/solar`, publica reportes de anomalía en `detector/anomaly` (MQTT) y los encola en RabbitMQ (`anomalies`) para que el explainer los procese.
+
 ## Tests
 
 ```bash
-uv run --package simulator pytest -v
+uv run --package simulator pytest simulator/tests/ -v
+uv run --package detector pytest detector/tests/ -v
 ```

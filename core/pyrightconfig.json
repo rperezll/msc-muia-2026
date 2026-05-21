@@ -2,5 +2,11 @@
   "venvPath": ".",
   "venv": ".venv",
   "pythonVersion": "3.13",
-  "typeCheckingMode": "standard"
+  "typeCheckingMode": "standard",
+  "extraPaths": [
+    "shared_lib/src",
+    "simulator/src",
+    "detector/src",
+    "test-utils/src"
+  ]
 }
