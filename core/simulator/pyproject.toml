@@ -1,12 +1,9 @@
 [project]
 name = "simulator"
-version = "0.1.0"
+version = "0.0.0"
 description = "MQTT simulator that publishes solar telemetry from CSV mock data"
 requires-python = ">=3.13"
-dependencies = [
-    "shared-lib",
-    "paho-mqtt>=2.0",
-]
+dependencies = ["shared-lib", "paho-mqtt>=2.0"]
 
 [dependency-groups]
 dev = ["pytest>=8.0", "test-utils"]
