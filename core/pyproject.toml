@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [tool.uv.workspace]
-members = ["shared_lib", "simulator", "test-utils", "detector"]
+members = ["shared_lib", "simulator", "test-utils", "detector", "explainer"]
 
 [dependency-groups]
 dev = ["ruff>=0.11"]
@@ -33,3 +33,6 @@ select = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["shared_lib", "simulator", "detector", "explainer", "test_utils"]
+
+[tool.ruff.lint.per-file-ignores]
+"explainer/src/explainer/prompts.py" = ["E501"]
