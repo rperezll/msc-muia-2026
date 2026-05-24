@@ -46,7 +46,7 @@ class RabbitMqTransport:
         )
 
     def disconnect(self) -> None:
-        """Cierra canal y conexión de forma segura"""
+        """Cierra la conexión de forma segura"""
         if self._connection and self._connection.is_open:
             self._connection.close()
             log.info("Desconectado de RabbitMQ.")
@@ -62,9 +62,7 @@ class RabbitMqTransport:
             self.connect()
 
     def publish(self, payload: str | bytes) -> None:
-        """Publica el payload en la cola con persistencia.
-        Reconecta automáticamente si la conexión se ha caído
-        """
+        """Publica el payload en la cola con persistencia"""
         self._ensure_connected()
         assert self._channel is not None
         body = payload.encode("utf-8") if isinstance(payload, str) else payload
@@ -72,14 +70,13 @@ class RabbitMqTransport:
             exchange="",
             routing_key=self._queue,
             body=body,
-            properties=pika.BasicProperties(delivery_mode=2),  # !! persistente
+            # Esto hace que los mensajes sean persistentes para ser resilientes a reruns
+            properties=pika.BasicProperties(delivery_mode=2),
         )
 
     def consume(self, callback: ConsumeCallback, prefetch: int = 1) -> None:
-        """Consume mensajes de la cola con manual ack. Bloquea el hilo.
-        Callback recibe los bytes del mensaje. Si no lanza excepción,
-        se hace ack automático
-        """
+        """Recupera trabajos de la cola y hace ack si el callback no lanza excepción"""
+
         if not self._channel:
             raise RuntimeError("RabbitMqTransport no conectado. Llama a connect() primero.")
 
