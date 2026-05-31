@@ -1,5 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from typing import TypeVar
+
+from pydantic import BaseModel
+
+T = TypeVar("T", bound=BaseModel)
 
 
 @dataclass
@@ -17,3 +22,10 @@ class BaseLLM(ABC):
 
     def chat_with_usage(self, messages: list[dict[str, str]], **kwargs) -> LLMResponse:
         return LLMResponse(content=self.chat(messages, **kwargs))
+
+    @abstractmethod
+    def chat_structured(
+        self, messages: list[dict[str, str]], schema: type[T], **kwargs
+    ) -> tuple[T, dict[str, int]]:
+        """LLM con structured output + usage"""
+        ...

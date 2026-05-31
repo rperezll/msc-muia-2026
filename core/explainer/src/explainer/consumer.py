@@ -15,8 +15,8 @@ from shared_lib.messaging.topics import (
 from shared_lib.schemas.anomaly import AnomalyReport
 from shared_lib.schemas.jobs import JobEvent, JobEventType
 
-from .engines import create_engine
-from .prompts import QUERY_RLM, QUERY_SINGLE_PASS
+from .engines import ExplainerEngine
+from .prompts import QUERY
 
 log = get_logger("explainer")
 
@@ -91,9 +91,8 @@ def _handle_report(
             len(report.detections),
             report.source_key,
         )
-        engine = create_engine(config.explainer)
-        query = QUERY_RLM if config.explainer.engine_mode.value == "rlm" else QUERY_SINGLE_PASS
-        result = engine.run(query, context=report.model_dump_json(), on_progress=on_progress)
+        engine = ExplainerEngine()
+        result = engine.run(QUERY, context=report.model_dump_json(), on_progress=on_progress)
 
         duration_ms = int((time.time() - started_at.timestamp()) * 1000)
         completed = JobEvent(

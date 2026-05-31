@@ -13,11 +13,6 @@ class LlmProvider(StrEnum):
     RUNPOD = "runpod"
 
 
-class EngineMode(StrEnum):
-    RLM = "rlm"
-    SINGLE_PASS = "single_pass"
-
-
 def _find_core_root() -> Path:
     """Busca la raíz de core/ subiendo hasta encontrar config.yml"""
     current = Path(__file__).resolve().parent
@@ -70,14 +65,13 @@ class DetectorConfig(BaseModel):
 
 
 class ExplainerConfig(BaseModel):
-    engine_mode: EngineMode = EngineMode.RLM
     llm_provider: LlmProvider
     api_key: str | None = None
     target_model: str
     base_url: str | None = None
     runpod_url: str | None = None
-    max_iterations: int = Field(default=10, ge=1)
     temperature: float = Field(default=0.1, ge=0.0, le=2.0)
+    audit_path: str = "logs/audit.jsonl"
 
 
 class McpServerConfig(BaseModel):

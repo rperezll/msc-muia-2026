@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import StrEnum
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -17,6 +18,13 @@ class AnomalyClassification(StrEnum):
     NIGHT_RESIDUAL_POWER = "night_residual_power"
     SENSOR_FAULT = "sensor_fault"
     UNKNOWN = "unknown"
+
+
+class LLMAnalysis(BaseModel):
+    anomaly_type: AnomalyClassification
+    affected_subsystem: str
+    summary: str
+    suggested_rag_search_queries: Annotated[list[str], Field(min_length=3, max_length=3)]
 
 
 class AnomalyDetection(BaseModel):

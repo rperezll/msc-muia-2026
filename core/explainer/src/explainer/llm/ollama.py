@@ -1,6 +1,21 @@
+from typing import TypeVar
+
 import requests
+from pydantic import BaseModel
 
 from ._base_llm import BaseLLM, LLMResponse
+
+T = TypeVar("T", bound=BaseModel)
+
+
+def _parse_ollama_usage(data: dict) -> dict[str, int]:
+    if "prompt_eval_count" not in data:
+        return {}
+    return {
+        "prompt_tokens": data.get("prompt_eval_count", 0),
+        "completion_tokens": data.get("eval_count", 0),
+        "total_tokens": data.get("prompt_eval_count", 0) + data.get("eval_count", 0),
+    }
 
 
 class Ollama(BaseLLM):
@@ -20,16 +35,28 @@ class Ollama(BaseLLM):
             response = requests.post(f"{self.base_url}/api/chat", json=payload)
             response.raise_for_status()
             data = response.json()
-            usage = {}
-            if "prompt_eval_count" in data:
-                usage = {
-                    "prompt_tokens": data.get("prompt_eval_count", 0),
-                    "completion_tokens": data.get("eval_count", 0),
-                    "total_tokens": data.get("prompt_eval_count", 0) + data.get("eval_count", 0),
-                }
             return LLMResponse(
                 content=data.get("message", {}).get("content", ""),
-                usage=usage,
+                usage=_parse_ollama_usage(data),
             )
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Fallo al conectar con Ollama en {self.base_url}. Error: {e}") from e
+
+    def chat_structured(
+        self, messages: list[dict[str, str]], schema: type[T], **kwargs
+    ) -> tuple[T, dict[str, int]]:
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "stream": False,
+            "format": schema.model_json_schema(),
+            **kwargs,
+        }
+        try:
+            response = requests.post(f"{self.base_url}/api/chat", json=payload)
+            response.raise_for_status()
+            data = response.json()
+            content = data.get("message", {}).get("content", "")
+            return schema.model_validate_json(content), _parse_ollama_usage(data)
         except requests.exceptions.RequestException as e:
             raise Exception(f"Fallo al conectar con Ollama en {self.base_url}. Error: {e}") from e

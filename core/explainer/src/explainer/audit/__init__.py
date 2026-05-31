@@ -1,3 +1,4 @@
-from .audit import AuditLogger
+from .logger import AuditLogger
+from .record import AuditRecord
 
-__all__ = ["AuditLogger"]
+__all__ = ["AuditLogger", "AuditRecord"]

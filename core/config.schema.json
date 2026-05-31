@@ -17,20 +17,8 @@
       "title": "DetectorConfig",
       "type": "object"
     },
-    "EngineMode": {
-      "enum": [
-        "rlm",
-        "single_pass"
-      ],
-      "title": "EngineMode",
-      "type": "string"
-    },
     "ExplainerConfig": {
       "properties": {
-        "engine_mode": {
-          "$ref": "#/$defs/EngineMode",
-          "default": "rlm"
-        },
         "llm_provider": {
           "$ref": "#/$defs/LlmProvider"
         },
@@ -73,12 +61,6 @@
           ],
           "default": null,
           "title": "Runpod Url"
-        },
-        "max_iterations": {
-          "default": 10,
-          "minimum": 1,
-          "title": "Max Iterations",
-          "type": "integer"
         },
         "temperature": {
           "default": 0.1,
