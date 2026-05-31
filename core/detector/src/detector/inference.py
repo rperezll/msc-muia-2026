@@ -53,7 +53,7 @@ class AnomalyDetector:
         )
 
         log.info(
-            "Modelo cargado — plant_id=%d, features=%d, time_steps=%d, scoring=%s, threshold=%.6f",
+            "Modelo cargado (plant_id=%d, features=%d, time_steps=%d, scoring=%s, threshold=%.6f)",
             plant_id,
             len(self.features),
             self.time_steps,

@@ -9,8 +9,15 @@ dependencies = [
     "requests>=2.32.5",
 ]
 
+[dependency-groups]
+dev = ["pytest>=8.0", "test-utils"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.uv.sources]
 shared-lib = { workspace = true }
+test-utils = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

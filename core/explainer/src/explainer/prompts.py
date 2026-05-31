@@ -3,15 +3,15 @@ from shared_lib.schemas.anomaly import AnomalyClassification as AnomalyType
 QUERY = "Analyze the following pre-processed anomaly summary and return a structured analysis."
 
 _ANOMALY_TYPE_DESCRIPTIONS = {
-    AnomalyType.power_degradation: "AC/DC power drop without clear external cause",
-    AnomalyType.thermal_stress: "anomalous module temperature relative to irradiation or ambient",
-    AnomalyType.irradiation_mismatch: "power output does not correlate with measured irradiation",
-    AnomalyType.dc_side_fault: "fault localized in PV strings or DC wiring",
-    AnomalyType.inverter_fault: "internal inverter failure (conversion, control, or grid-side)",
-    AnomalyType.grid_instability: "abnormal behavior at the grid connection point",
-    AnomalyType.night_residual_power: "anomalous production during low-irradiation or night periods",
-    AnomalyType.sensor_fault: "inconsistent sensor reading not explained by physical phenomena",
-    AnomalyType.unknown: "does not fit any category above",
+    AnomalyType.POWER_DEGRADATION: "AC/DC power drop without clear external cause",
+    AnomalyType.THERMAL_STRESS: "anomalous module temperature relative to irradiation or ambient",
+    AnomalyType.IRRADIATION_MISMATCH: "power output does not correlate with measured irradiation",
+    AnomalyType.DC_SIDE_FAULT: "fault localized in PV strings or DC wiring",
+    AnomalyType.INVERTER_FAULT: "internal inverter failure (conversion, control, or grid-side)",
+    AnomalyType.GRID_INSTABILITY: "abnormal behavior at the grid connection point",
+    AnomalyType.NIGHT_RESIDUAL_POWER: "anomalous production during low-irradiation or night periods",
+    AnomalyType.SENSOR_FAULT: "inconsistent sensor reading not explained by physical phenomena",
+    AnomalyType.UNKNOWN: "does not fit any category above",
 }
 
 _ANOMALY_TYPES_BLOCK = "\n".join(f'  - "{k}": {v}' for k, v in _ANOMALY_TYPE_DESCRIPTIONS.items())

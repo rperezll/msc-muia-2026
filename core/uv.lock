@@ -190,11 +190,23 @@ dependencies = [
     { name = "shared-lib" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "test-utils" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "openai", specifier = ">=2.21.0" },
     { name = "requests", specifier = ">=2.32.5" },
     { name = "shared-lib", editable = "shared_lib" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "test-utils", editable = "test-utils" },
 ]
 
 [[package]]

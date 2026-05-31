@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from shared_lib.schemas import SolarTelemetryPayload
+from shared_lib.schemas.anomaly import AnomalyDetection, AnomalyReport
 
 _TELEMETRY_DEFAULTS: dict = {
     "DATE_TIME": datetime(2020, 6, 1, 0, 0),
@@ -19,3 +20,23 @@ _TELEMETRY_DEFAULTS: dict = {
 
 def make_telemetry_payload(**overrides) -> SolarTelemetryPayload:
     return SolarTelemetryPayload(**(_TELEMETRY_DEFAULTS | overrides))
+
+
+def make_detection(
+    *, source_key="TEST_INV", mae=0.9, threshold=0.5, timestamp=None, **payload_overrides
+) -> AnomalyDetection:
+    ts = timestamp or datetime(2020, 6, 1, 12, 0)
+    return AnomalyDetection(
+        source_key=source_key,
+        timestamp=ts,
+        mae=mae,
+        threshold=threshold,
+        payload=make_telemetry_payload(SOURCE_KEY=source_key, **payload_overrides),
+    )
+
+
+def make_anomaly_report(*, source_key="TEST_INV", detections=None) -> AnomalyReport:
+    return AnomalyReport(
+        source_key=source_key,
+        detections=detections or [make_detection(source_key=source_key)],
+    )
