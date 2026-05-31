@@ -4,6 +4,7 @@ from shared_lib.schemas.anomaly import (
     AnomalyReport,
     LLMAnalysis,
 )
+from shared_lib.schemas.explanation import ExplanationRecord
 from shared_lib.schemas.jobs import JobEvent, JobEventType
 from shared_lib.schemas.telemetry import SimulatorState, SolarTelemetryPayload
 
@@ -11,6 +12,7 @@ __all__ = [
     "AnomalyClassification",
     "AnomalyDetection",
     "AnomalyReport",
+    "ExplanationRecord",
     "JobEvent",
     "JobEventType",
     "LLMAnalysis",

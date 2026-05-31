@@ -46,9 +46,18 @@ class RabbitMQServiceConfig(BaseModel):
     password: str = "guest"
 
 
+class PostgresConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 5432
+    user: str = "postgres"
+    password: str = "postgres"
+    database: str = "muia"
+
+
 class ServicesConfig(BaseModel):
     mqtt: MqttServiceConfig = Field(default_factory=MqttServiceConfig)
     rabbitmq: RabbitMQServiceConfig = Field(default_factory=RabbitMQServiceConfig)
+    postgres: PostgresConfig = Field(default_factory=PostgresConfig)
 
 
 class SimulatorConfig(BaseModel):

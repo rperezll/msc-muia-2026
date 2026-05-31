@@ -4,6 +4,8 @@ from datetime import datetime
 from uuid import uuid4
 
 from shared_lib.config import config
+from shared_lib.db import PostgresTransport
+from shared_lib.db.repositories import ExplanationRepository
 from shared_lib.logger import get_logger
 from shared_lib.messaging.mqtt import MqttTransport
 from shared_lib.messaging.rabbitmq import RabbitMqTransport
@@ -50,7 +52,10 @@ def _notify_mqtt(mqtt_transport: MqttTransport, event: JobEvent) -> None:
 
 
 def _handle_report(
-    body: bytes, job_transport: RabbitMqTransport, mqtt_transport: MqttTransport
+    body: bytes,
+    job_transport: RabbitMqTransport,
+    mqtt_transport: MqttTransport,
+    explanation_repo: ExplanationRepository,
 ) -> None:
     report = AnomalyReport.model_validate_json(body)
 
@@ -105,6 +110,12 @@ def _handle_report(
         )
         _publish_job_event(job_transport, completed)
         _notify_mqtt(mqtt_transport, completed)
+
+        try:
+            explanation_repo.save(completed)
+        except Exception as e:
+            log.error("Error guardando explicación %s en Postgres: %s", report.report_id, e)
+
         log.info("[%s] Reporte %s completado: %s", WORKER_ID, report.report_id, str(result)[:200])
 
     except Exception as e:
@@ -135,9 +146,15 @@ def start_consumer() -> None:
     )
     mqtt_transport.connect()
 
+    postgres_transport = PostgresTransport(postgres_config=config.services.postgres)
+    postgres_transport.connect()
+    explanation_repo = ExplanationRepository(postgres_transport)
+
     anomaly_transport = RabbitMqTransport(
         queue=RABBITMQ_QUEUE_ANOMALIES,
         rabbitmq_config=config.services.rabbitmq,
     )
     anomaly_transport.connect()
-    anomaly_transport.consume(lambda body: _handle_report(body, job_transport, mqtt_transport))
+    anomaly_transport.consume(
+        lambda body: _handle_report(body, job_transport, mqtt_transport, explanation_repo)
+    )

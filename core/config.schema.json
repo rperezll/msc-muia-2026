@@ -68,6 +68,11 @@
           "minimum": 0.0,
           "title": "Temperature",
           "type": "number"
+        },
+        "audit_path": {
+          "default": "logs/audit.jsonl",
+          "title": "Audit Path",
+          "type": "string"
         }
       },
       "required": [
@@ -181,6 +186,37 @@
       "title": "MqttServiceConfig",
       "type": "object"
     },
+    "PostgresConfig": {
+      "properties": {
+        "host": {
+          "default": "localhost",
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "default": 5432,
+          "title": "Port",
+          "type": "integer"
+        },
+        "user": {
+          "default": "postgres",
+          "title": "User",
+          "type": "string"
+        },
+        "password": {
+          "default": "postgres",
+          "title": "Password",
+          "type": "string"
+        },
+        "database": {
+          "default": "muia",
+          "title": "Database",
+          "type": "string"
+        }
+      },
+      "title": "PostgresConfig",
+      "type": "object"
+    },
     "RabbitMQServiceConfig": {
       "properties": {
         "host": {
@@ -214,6 +250,9 @@
         },
         "rabbitmq": {
           "$ref": "#/$defs/RabbitMQServiceConfig"
+        },
+        "postgres": {
+          "$ref": "#/$defs/PostgresConfig"
         }
       },
       "title": "ServicesConfig",
