@@ -6,9 +6,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from knowledge.dependencies import get_explanation_repo, get_rag_service
 from knowledge.rag.service import RagService
 from shared_lib.config import config
-from shared_lib.db.repositories.explanation import ExplanationFilters, ExplanationRepository
+from shared_lib.db.repositories.explanation import ExplanationRepository
 from shared_lib.schemas import (
     AugmentResponse,
+    ExplanationFilters,
     ExplanationListResponse,
     ExplanationRecord,
     FeedbackRequest,

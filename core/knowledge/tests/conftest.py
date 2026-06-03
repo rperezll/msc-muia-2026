@@ -12,7 +12,7 @@ from knowledge.schemas import AugmentResponse
 from shared_lib.schemas.explanation import ExplanationRecord
 
 if TYPE_CHECKING:
-    from shared_lib.db.repositories.explanation import ExplanationFilters
+    from shared_lib.schemas.explanation import ExplanationFilters
 
 _NOW = datetime(2025, 1, 1, 12, 0, 0, tzinfo=UTC)
 

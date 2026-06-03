@@ -5,6 +5,7 @@ from shared_lib.schemas.anomaly import (
     LLMAnalysis,
 )
 from shared_lib.schemas.explanation import (
+    ExplanationFilters,
     ExplanationListResponse,
     ExplanationRecord,
     FeedbackRequest,
@@ -18,6 +19,7 @@ __all__ = [
     "AnomalyDetection",
     "AnomalyReport",
     "AugmentResponse",
+    "ExplanationFilters",
     "ExplanationListResponse",
     "ExplanationRecord",
     "FeedbackRequest",

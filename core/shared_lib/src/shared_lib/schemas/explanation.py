@@ -4,6 +4,14 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
+class ExplanationFilters(BaseModel):
+    source_key: str | None = None
+    severity: str | None = None
+    anomaly_type: str | None = None
+    date_from: datetime | None = None
+    date_to: datetime | None = None
+
+
 class ExplanationRecord(BaseModel):
     id: str
     source_key: str
