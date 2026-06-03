@@ -97,6 +97,21 @@ class McpServerConfig(BaseModel):
     chunk_overlap: int = Field(default=64, ge=0)
 
 
+class KnowledgeConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 8080
+    default_page_size: int = Field(default=20, ge=1, le=100)
+    max_page_size: int = Field(default=100, ge=1)
+
+
+class RagConfig(BaseModel):
+    api_key: str | None = None
+    llm_model: str = "gpt-4o-mini"
+    embedding_model: str = "text-embedding-3-small"
+    temperature: float = Field(default=0.2, ge=0.0, le=2.0)
+    top_k: int = Field(default=5, ge=1)
+
+
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
@@ -107,6 +122,8 @@ class AppConfig(BaseModel):
     simulator: SimulatorConfig
     detector: DetectorConfig
     explainer: ExplainerConfig
+    knowledge: KnowledgeConfig = Field(default_factory=KnowledgeConfig)
+    rag: RagConfig = Field(default_factory=RagConfig)
     mcp_servers: list[McpServerConfig]
 
 
