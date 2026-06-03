@@ -2,11 +2,11 @@ import json
 import time
 
 from shared_lib.config import config
+from shared_lib.llm import create_llm
 from shared_lib.logger import get_logger
 from shared_lib.schemas.anomaly import AnomalyReport, LLMAnalysis
 
 from ..audit import AuditLogger, AuditRecord
-from ..llm._llm_factory import create_llm
 from ..prompts import SYSTEM
 from ._base import BaseEngine, ProgressCallback
 from .preprocess import preprocess
@@ -25,7 +25,13 @@ class ExplainerEngine(BaseEngine):
 
     def __init__(self) -> None:
         self._cfg = config.explainer
-        self._llm = create_llm(self._cfg)
+        self._llm = create_llm(
+            provider=self._cfg.llm_provider,
+            model=self._cfg.target_model,
+            api_key=self._cfg.api_key,
+            base_url=self._cfg.base_url,
+            runpod_url=self._cfg.runpod_url,
+        )
         self._audit = AuditLogger(path=self._cfg.audit_path)
 
     def run(self, user_query: str, context: str, on_progress: ProgressCallback = None) -> str:
