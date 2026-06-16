@@ -116,10 +116,17 @@ class ExplanationRepository:
             row = cur.fetchone()
         return row[0] if row else 0
 
+    def list_source_keys(self) -> list[str]:
+        """Devuelve los source_key distintos que tienen al menos una explicación"""
+        with self._transport.cursor() as cur:
+            cur.execute("SELECT DISTINCT source_key FROM explanations ORDER BY source_key")
+            rows = cur.fetchall()
+        return [row[0] for row in rows]
+
     def set_feedback(self, explanation_id: str, feedback: str | None) -> ExplanationRecord | None:
         sql = """
             UPDATE explanations
-            SET feedback = %s, feedback_at = CASE WHEN %s IS NULL THEN NULL ELSE now() END
+            SET feedback = %s, feedback_at = CASE WHEN %s::text IS NULL THEN NULL ELSE now() END
             WHERE id = %s
         """
         with self._transport.cursor() as cur:

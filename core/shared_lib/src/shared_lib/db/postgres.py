@@ -56,13 +56,22 @@ class PostgresTransport:
 
     @contextmanager
     def cursor(self) -> Iterator[psycopg.Cursor]:
-        """Operación transaccional + commit/rollback"""
-        self._ensure_connected()
-        assert self._connection is not None
-        with self._connection.cursor() as cur:
+        """Operación transaccional + commit/rollback. Reintenta una vez si la conexión está zombi."""
+        for attempt in range(2):
+            self._ensure_connected()
+            assert self._connection is not None
             try:
-                yield cur
-                self._connection.commit()
-            except Exception:
-                self._connection.rollback()
+                with self._connection.cursor() as cur:
+                    try:
+                        yield cur
+                        self._connection.commit()
+                        return
+                    except Exception:
+                        self._connection.rollback()
+                        raise
+            except psycopg.OperationalError:
+                if attempt == 0:
+                    log.warning("Conexión Postgres caída detectada, reconectando...")
+                    self._connection = None
+                    continue
                 raise

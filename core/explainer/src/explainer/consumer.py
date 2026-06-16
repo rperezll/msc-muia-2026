@@ -108,13 +108,13 @@ def _handle_report(
             duration_ms=duration_ms,
             report=report,
         )
-        _publish_job_event(job_transport, completed)
-        _notify_mqtt(mqtt_transport, completed)
-
         try:
             explanation_repo.save(completed)
         except Exception as e:
             log.error("Error guardando explicación %s en Postgres: %s", report.report_id, e)
+
+        _publish_job_event(job_transport, completed)
+        _notify_mqtt(mqtt_transport, completed)
 
         log.info("[%s] Reporte %s completado: %s", WORKER_ID, report.report_id, str(result)[:200])
 

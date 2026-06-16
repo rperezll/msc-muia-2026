@@ -16,6 +16,8 @@ CREATE INDEX ON explanations (source_key);
 CREATE INDEX ON explanations (created_at DESC);
 CREATE INDEX ON explanations (feedback);
 CREATE INDEX ON explanations USING gin (result);
+CREATE INDEX ON explanations ((result #>> '{0,event_metadata,severity}'));
+CREATE INDEX ON explanations ((result #>> '{0,rag_search_parameters,anomaly_type}'));
 
 CREATE TABLE documents (
     id          SERIAL PRIMARY KEY,

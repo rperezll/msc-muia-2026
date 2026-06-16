@@ -46,6 +46,11 @@ def list_explanations(
     return ExplanationListResponse(items=items, total=total, limit=effective_limit, offset=offset)
 
 
+@router.get("/source-keys", response_model=list[str])
+def list_source_keys(repo: RepoDep) -> list[str]:
+    return repo.list_source_keys()
+
+
 @router.get("/{explanation_id}", response_model=ExplanationRecord)
 def get_explanation(explanation_id: str, repo: RepoDep) -> ExplanationRecord:
     record = repo.get(explanation_id)
