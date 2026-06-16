@@ -1,0 +1,99 @@
+<svg
+  viewBox="0 40 800 165"
+  preserveAspectRatio="xMidYMin meet"
+  class="block h-full w-full max-h-52 md:max-h-60"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <radialGradient id="sunSphere" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#fef9c3" />
+      <stop offset="40%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#b45309" />
+    </radialGradient>
+  </defs>
+
+  <line
+    x1="50"
+    y1="170"
+    x2="750"
+    y2="170"
+    class="stroke-horizon"
+    stroke-width="1"
+    stroke-opacity="0.25"
+  />
+
+  <path
+    d="M 60,160 Q 400,5 740,160"
+    fill="none"
+    class="stroke-arc"
+    stroke-width="1.5"
+    stroke-dasharray="6 4"
+    [attr.stroke-opacity]="isNight() ? '0.15' : '0.4'"
+    style="transition: stroke-opacity 1s ease"
+  />
+
+  @if (!isNight() && progress() > 0) {
+    <path
+      d="M 60,160 Q 400,5 740,160"
+      fill="none"
+      class="stroke-trail"
+      stroke-width="2"
+      [attr.stroke-dasharray]="trailDash()"
+      stroke-linecap="round"
+      style="transition: stroke-dasharray 1s ease-out"
+    />
+  }
+
+  <g
+    [style.transform]="'translate(' + sunPos().x + 'px,' + sunPos().y + 'px)'"
+    style="transition: transform 1s ease-out; cursor: default"
+  >
+    <title>{{ currentTimeLabel() }}</title>
+
+    @if (currentTimeLabel() !== '—') {
+      <rect x="-19" y="-28" width="38" height="15" rx="3" class="badge-bg" />
+      <text
+        x="0"
+        y="-20"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-family="JetBrains Mono, ui-monospace, monospace"
+        font-size="9"
+        font-weight="500"
+        class="fill-time"
+      >
+        {{ currentTimeLabel() }}
+      </text>
+    }
+
+    @if (isNight()) {
+      <circle r="10" fill="#cbd5e1" opacity="0.85" />
+      <circle r="10" cx="5" cy="-3" class="fill-surface" />
+    } @else {
+      <circle r="10" fill="url(#sunSphere)" />
+    }
+  </g>
+
+  <text
+    x="60"
+    y="192"
+    class="fill-label"
+    font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+    font-size="13"
+    font-weight="500"
+  >
+    Sunrise {{ sunriseLabel }}
+  </text>
+
+  <text
+    x="740"
+    y="192"
+    text-anchor="end"
+    class="fill-label"
+    font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+    font-size="13"
+    font-weight="500"
+  >
+    Sunset {{ sunsetLabel }}
+  </text>
+</svg>

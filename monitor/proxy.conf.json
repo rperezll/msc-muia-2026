@@ -1,0 +1,15 @@
+{
+  "/api/rabbitmq": {
+    "target": "http://localhost:15672",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/rabbitmq": "/api"
+    }
+  },
+  "/api/explanations": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,77 @@
+<div class="flex h-full flex-col">
+  <div class="flex items-center justify-between border-b border-border-default px-4 py-3">
+    <h2 class="text-base font-semibold text-neutral-100">Anomalies</h2>
+    <span
+      class="rounded-full bg-surface-overlay px-2.5 py-0.5 font-mono text-sm text-neutral-200"
+      aria-label="Total anomalies"
+    >
+      {{ mqtt.anomalyCount() }}
+    </span>
+  </div>
+
+  <div class="flex-1 overflow-y-auto" role="log" aria-live="polite">
+    @for (report of mqtt.anomalies(); track report.report_id) {
+      <div
+        class="border-b border-border-subtle transition-colors hover:bg-surface-overlay animate-fade-in"
+      >
+        <button
+          class="flex w-full items-center justify-between px-4 py-3 text-left"
+          (click)="toggle(report.report_id)"
+        >
+          <div class="flex items-center gap-2.5">
+            <svg
+              lucideChevronRight
+              [size]="16"
+              class="text-neutral-400 transition-transform duration-300"
+              [class.rotate-90]="expandedId() === report.report_id"
+            ></svg>
+            <span class="font-mono text-sm font-medium text-neutral-100">
+              {{ report.source_key }}
+            </span>
+            <span class="rounded-full bg-surface-overlay px-2 py-0.5 text-xs text-neutral-300">
+              {{ report.detections.length }}
+            </span>
+          </div>
+          <span class="font-mono text-xs text-neutral-300">
+            {{ report.detections[0]?.timestamp | date: 'dd MMM HH:mm' }}
+          </span>
+        </button>
+
+        <div class="collapsible-grid" [class.expanded]="expandedId() === report.report_id">
+          <div class="overflow-hidden">
+            <div class="px-4 pb-3 space-y-2">
+              @for (d of report.detections; track d.detection_id) {
+                <div
+                  class="flex items-center justify-between rounded-md bg-surface-sunken px-3 py-2"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="size-2 rounded-full bg-status-error"></div>
+                    <span class="font-mono text-sm text-neutral-200">
+                      MAE {{ d.mae | number: '1.4-4' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-3 text-xs text-neutral-300">
+                    <span>{{ d.payload.AC_POWER | number: '1.0-0' }} W</span>
+                    <span>{{ d.payload.IRRADIATION | number: '1.2-2' }} irr</span>
+                    <span>{{ d.payload.MODULE_TEMPERATURE | number: '1.1-1' }}°C</span>
+                  </div>
+                </div>
+              }
+
+              <div class="flex items-center gap-2 pt-1 text-xs text-neutral-400">
+                <span>{{ report.detections.length }} detections</span>
+                <span>·</span>
+                <span>Threshold: {{ report.detections[0]?.threshold | number: '1.4-4' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="flex flex-col items-center justify-center py-16 text-neutral-400 gap-2">
+        <svg lucideShieldCheck [size]="35"></svg>
+        <p class="text-sm">No anomalies detected</p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,44 @@
+{
+  "name": "monitor",
+  "version": "0.0.0",
+  "description": "Real-time monitoring dashboard for solar anomaly detection pipeline",
+  "scripts": {
+    "ng": "ng",
+    "dev": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "lint": "ng lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "private": true,
+  "packageManager": "npm@10.9.4",
+  "dependencies": {
+    "@angular/cdk": "^21.2.5",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "@lucide/angular": "^1.7.0",
+    "mqtt": "^5.15.1",
+    "ng-diagram": "^1.1.2",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.2",
+    "@angular/cli": "^21.2.2",
+    "@angular/compiler-cli": "^21.2.0",
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/postcss": "^4.1.12",
+    "angular-eslint": "21.4.0",
+    "eslint": "^10.3.0",
+    "postcss": "^8.5.3",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.1.12",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.59.2"
+  }
+}

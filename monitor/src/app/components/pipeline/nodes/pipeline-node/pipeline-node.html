@@ -1,0 +1,86 @@
+<div
+  class="relative h-60 w-64 overflow-hidden rounded-xl transition-all duration-300"
+  [class.beam-border]="beaming()"
+  [class.opacity-50]="status() === 'disabled'"
+  [class.animate-pulse-ring]="pulse()"
+>
+  @if (beaming()) {
+    <span
+      class="pointer-events-none absolute inset-[-200%] animate-[border-beam_3s_linear_infinite]"
+      style="
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          transparent 70%,
+          color-mix(in srgb, var(--color-status-ok) 40%, transparent) 100%
+        );
+      "
+    ></span>
+  }
+
+  <div
+    class="relative flex h-full w-full flex-col rounded-xl bg-surface-raised p-3 md:p-5"
+    [class]="!beaming() ? 'border ' + borderClass() : ''"
+  >
+    <div class="mb-3 flex items-center justify-between">
+      <span class="text-xs font-semibold uppercase tracking-widest text-neutral-300">
+        {{ data().label }}
+      </span>
+      <span
+        class="rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wide"
+        [class]="statusBadgeClass()"
+        >{{ statusLabel() }}</span
+      >
+    </div>
+
+    <ng-container
+      [ngComponentOutlet]="data().content"
+      [ngComponentOutletInjector]="contentInjector"
+    />
+  </div>
+</div>
+
+@if (data().type !== 'explainer') {
+  <ng-diagram-port
+    id="port-right"
+    type="source"
+    side="right"
+    [class.port-active]="activePorts().has('port-right')"
+  />
+  <ng-diagram-port
+    id="port-bottom"
+    type="source"
+    side="bottom"
+    [class.port-active]="activePorts().has('port-bottom')"
+  />
+}
+
+@if (data().type === 'explainer') {
+  <ng-diagram-port
+    id="port-bottom"
+    type="target"
+    side="bottom"
+    [class.port-active]="activePorts().has('port-bottom')"
+  />
+  <ng-diagram-port
+    id="port-right"
+    type="target"
+    side="right"
+    [class.port-active]="activePorts().has('port-right')"
+  />
+}
+
+@if (data().type !== 'simulator') {
+  <ng-diagram-port
+    id="port-left"
+    type="target"
+    side="left"
+    [class.port-active]="activePorts().has('port-left')"
+  />
+  <ng-diagram-port
+    id="port-top"
+    type="target"
+    side="top"
+    [class.port-active]="activePorts().has('port-top')"
+  />
+}

@@ -1,0 +1,116 @@
+<div class="flex flex-col">
+  <div class="flex shrink-0 items-center gap-4 border-b border-border-default px-4 py-3">
+    <h2 class="text-base font-semibold text-neutral-100">Explainer</h2>
+
+    <div class="ml-auto flex items-center gap-2">
+      <div class="relative">
+        <select
+          class="cursor-pointer appearance-none rounded-md border border-border-default bg-surface-overlay py-1 pl-2.5 pr-6 text-xs text-neutral-200 focus:outline-none focus:ring-1 focus:ring-border-focus"
+          [value]="store.filterSeverity() ?? ''"
+          (change)="onSeverityChange($event)"
+        >
+          <option value="">All severities</option>
+          @for (opt of severityOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+        <svg
+          lucideChevronDown
+          [size]="12"
+          class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-neutral-400"
+        ></svg>
+      </div>
+
+      <div class="relative">
+        <select
+          class="cursor-pointer appearance-none rounded-md border border-border-default bg-surface-overlay py-1 pl-2.5 pr-6 text-xs text-neutral-200 focus:outline-none focus:ring-1 focus:ring-border-focus"
+          [value]="store.filterSourceKey() ?? ''"
+          (change)="onSourceKeyChange($event)"
+        >
+          <option value="">All inverters</option>
+          @for (key of store.sourceKeys(); track key) {
+            <option [value]="key">{{ key }}</option>
+          }
+        </select>
+        <svg
+          lucideChevronDown
+          [size]="12"
+          class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-neutral-400"
+        ></svg>
+      </div>
+
+      @if (store.filterSeverity() || store.filterSourceKey()) {
+        <button
+          class="flex items-center justify-center rounded-md p-1 text-neutral-400 transition-colors hover:bg-surface-overlay hover:text-status-error cursor-pointer"
+          title="Clear filters"
+          (click)="clearFilters()"
+        >
+          <svg lucideTrash2 [size]="14"></svg>
+        </button>
+      }
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="h-4 w-px bg-border-default"></div>
+
+      <div class="flex items-center gap-3">
+        @if (store.persistedTotal() > 0) {
+          <span class="font-mono text-sm text-neutral-200">
+            {{ store.persisted().length }}/{{ store.persistedTotal() }} saved
+          </span>
+        }
+        @if (store.persistedLoading()) {
+          <span class="text-xs italic text-neutral-400">syncing…</span>
+        } @else if (store.persistedError()) {
+          <span class="rounded-full bg-surface-overlay px-2.5 py-0.5 text-xs text-status-error">
+            Unavailable
+          </span>
+        } @else if (store.persistedTotal() === 0 && !store.isAnalyzing()) {
+          <span
+            class="rounded-full bg-surface-overlay px-2.5 py-0.5 text-xs italic text-neutral-400"
+          >
+            Waiting
+          </span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="h-[13.15rem] overflow-x-auto overflow-y-hidden">
+    @if (store.persisted().length === 0) {
+      <div class="flex h-full items-center justify-center">
+        <div class="flex flex-col items-center gap-3 text-neutral-400">
+          <svg lucideSparkles [size]="36" [strokeWidth]="1.5"></svg>
+          <div class="text-center">
+            @if (store.filterSeverity() || store.filterSourceKey()) {
+              <p class="text-sm">No results for current filters</p>
+            } @else {
+              <p class="text-sm">Waiting for anomaly explanations</p>
+              <p class="text-xs text-neutral-400">Each anomaly will be analyzed by the Explainer</p>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="flex h-full flex-nowrap items-stretch gap-3 px-4 py-3">
+        @for (record of store.persisted(); track record.id) {
+          <app-explanation-card [record]="record" (recordSelect)="openDetail($event)" />
+        }
+
+        @if (store.hasMore()) {
+          <button
+            class="flex w-14 shrink-0 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-border-default bg-surface-overlay text-neutral-400 transition-colors hover:bg-surface-raised hover:text-neutral-200 disabled:opacity-50"
+            [disabled]="store.persistedLoading()"
+            (click)="store.loadMore()"
+          >
+            @if (store.persistedLoading()) {
+              <svg lucideChevronDown [size]="16" class="animate-bounce"></svg>
+            } @else {
+              <svg lucideChevronRight [size]="16"></svg>
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>

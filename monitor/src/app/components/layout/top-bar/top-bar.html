@@ -1,0 +1,101 @@
+<header
+  class="flex flex-wrap items-center justify-between gap-2 px-4 py-2 border-b border-border-default bg-surface-raised md:h-14 md:flex-nowrap md:px-6 md:py-0"
+>
+  <div class="flex items-center gap-3">
+    <div
+      class="flex shrink-0 items-center justify-center size-7 rounded-[7px] border border-border-default bg-surface-overlay"
+    >
+      <svg
+        lucideActivity
+        [size]="14"
+        [strokeWidth]="2.5"
+        class="text-neutral-100"
+        aria-hidden="true"
+      ></svg>
+    </div>
+    <h1 class="text-sm font-semibold tracking-tight text-neutral-100 md:text-base">
+      Solar Anomalies Monitor
+    </h1>
+  </div>
+
+  <div class="flex items-center gap-3 md:gap-5">
+    @if (mqtt.connected()) {
+      <div
+        class="relative hidden rounded-full sm:flex overflow-hidden p-px"
+        [class]="badgeWrapperClass()"
+      >
+        @if (simulatorState() === 'playing') {
+          <span
+            class="absolute inset-[-200%] animate-[border-beam_3s_linear_infinite]"
+            style="
+              background: conic-gradient(
+                from 0deg,
+                transparent 0%,
+                transparent 70%,
+                color-mix(in srgb, var(--color-status-ok) 40%, transparent) 100%
+              );
+            "
+          ></span>
+        }
+        <div
+          class="relative flex items-center gap-2 rounded-full py-1 pl-2.5 pr-3 text-xs font-medium tracking-wide uppercase"
+          [class]="badgeClass()"
+        >
+          <span class="inline-flex size-1.5 rounded-full" [class]="dotColorClass()"></span>
+          {{ statusLabel() }}
+        </div>
+      </div>
+    }
+
+    <div
+      class="flex items-center rounded-lg border border-border-default bg-surface-overlay overflow-hidden"
+    >
+      @if (simulatorState() === 'playing') {
+        <button
+          (click)="mqtt.sendControl('pause')"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-neutral-200 transition-colors cursor-pointer hover:bg-surface-sunken hover:text-neutral-100"
+          title="Pause simulator"
+        >
+          <svg lucidePause [size]="15" [strokeWidth]="2.2"></svg>
+          Pause
+        </button>
+      } @else {
+        <button
+          (click)="mqtt.sendControl('play')"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-accent transition-colors cursor-pointer hover:bg-accent-subtle"
+          title="Start simulator"
+        >
+          <svg lucidePlay [size]="15" [strokeWidth]="2.2"></svg>
+          Play
+        </button>
+      }
+
+      @if (simulatorState() !== 'stopped') {
+        <div class="w-px self-stretch bg-border-default"></div>
+
+        <button
+          (click)="resetAction()"
+          [disabled]="simulatorState() === 'playing'"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium transition-colors"
+          [class]="resetClass()"
+          title="Reset simulator (pause first)"
+        >
+          <svg lucideRefreshCw [size]="14" [strokeWidth]="2.2"></svg>
+          Reset
+        </button>
+      }
+    </div>
+
+    <button
+      (click)="toggleTheme()"
+      class="rounded-md p-1.5 text-neutral-300 transition-colors cursor-pointer hover:text-neutral-100 hover:bg-surface-overlay"
+      [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+    >
+      @if (isDark()) {
+        <svg lucideSun [size]="18" [strokeWidth]="1.8"></svg>
+      } @else {
+        <svg lucideMoon [size]="18" [strokeWidth]="1.8"></svg>
+      }
+    </button>
+  </div>
+</header>

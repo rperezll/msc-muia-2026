@@ -1,0 +1,50 @@
+<div class="card-enter h-full">
+  <button
+    type="button"
+    class="flex h-full w-52 shrink-0 cursor-pointer flex-col justify-between rounded-lg border bg-surface-overlay p-3 text-left hover:bg-surface-raised"
+    [class]="borderClass()"
+    (click)="recordSelect.emit(record())"
+  >
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between">
+        @if (severity()) {
+          <app-severity-badge [severity]="severity()!" />
+        } @else {
+          <span
+            class="inline-flex items-center rounded-full bg-status-ok/15 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-status-ok"
+          >
+            Completed
+          </span>
+        }
+        <div class="flex items-center gap-2">
+          <span class="shrink-0 font-mono text-xs text-neutral-400">{{ durationLabel() }}</span>
+          @if (record().feedback === 'up') {
+            <svg lucideThumbsUp [size]="13" [strokeWidth]="2.5" class="text-status-ok"></svg>
+          } @else if (record().feedback === 'down') {
+            <svg lucideThumbsDown [size]="13" [strokeWidth]="2.5" class="text-status-error"></svg>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-0.5">
+        <span class="text-xs text-neutral-400">Inverter</span>
+        <p class="truncate font-mono text-sm font-medium text-neutral-100">
+          {{ record().source_key }}
+        </p>
+      </div>
+
+      @if (detectedAt()) {
+        <div class="flex flex-col gap-0.5">
+          <span class="text-xs text-neutral-400">Detection</span>
+          <p class="font-mono text-sm font-medium text-neutral-100">{{ detectedAt() }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="pt-2">
+      <span class="max-w-full truncate text-xs font-medium text-neutral-300">
+        {{ classificationLabel() ?? '—' }}
+      </span>
+    </div>
+  </button>
+</div>

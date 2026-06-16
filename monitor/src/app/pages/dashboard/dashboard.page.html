@@ -1,0 +1,26 @@
+<div class="flex h-screen flex-col">
+  <app-top-bar />
+
+  <main class="flex flex-1 flex-col overflow-hidden">
+    <div class="flex flex-1 flex-col overflow-hidden lg:flex-row">
+      <section class="flex flex-1 flex-col overflow-auto bg-dot-grid">
+        <app-sun-cycle [currentTime]="mqtt.simulatedTime()" />
+        <div class="flex flex-1 min-h-0">
+          <app-pipeline-graph />
+        </div>
+      </section>
+
+      <aside
+        class="h-64 shrink-0 overflow-y-auto border-t border-border-default bg-surface-raised lg:h-auto lg:w-105 lg:border-l lg:border-t-0"
+      >
+        <app-anomaly-panel />
+      </aside>
+    </div>
+
+    <section class="shrink-0 border-t border-border-default bg-surface-raised">
+      <app-explainer-panel />
+    </section>
+  </main>
+
+  <app-footer />
+</div>
