@@ -143,6 +143,9 @@ export class ExplanationsStore {
       next: (resp) => {
         result.set(resp);
         loading.set(false);
+        this.persisted.update((list) =>
+          list.map((r) => (r.id === id ? { ...r, augmented_result: resp } : r)),
+        );
       },
       error: (err) => {
         error.set(err?.error?.detail ?? 'Augmentation failed');

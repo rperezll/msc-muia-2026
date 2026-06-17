@@ -128,6 +128,7 @@ export interface ExplanationRecord {
   feedback: ExplanationFeedback;
   feedback_at: string | null;
   created_at: string;
+  augmented_result: AugmentResponse | null;
 }
 
 export interface ExplanationListResponse {

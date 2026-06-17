@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal, Signal } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
-import { LucideSearch, LucideX, LucideSparkles } from '@lucide/angular';
+import { LucideSearch, LucideX } from '@lucide/angular';
 import { DialogRef } from '@angular/cdk/dialog';
 
 import {
@@ -9,6 +9,7 @@ import {
   worstSeverity,
   type AnomalyDetection,
   type AnomalyClassification,
+  type AugmentResponse,
   type ExplanationFeedback,
   type ExplanationRecord,
   type ExplainerSeverity,
@@ -28,7 +29,6 @@ type Tab = 1 | 2 | 3;
     DatePipe,
     LucideSearch,
     LucideX,
-    LucideSparkles,
     FeedbackControlComponent,
     AugmentPanelComponent,
     SeverityBadgeComponent,
@@ -75,10 +75,27 @@ export class ExplainerDetailComponent {
     }
   });
 
-  protected augmentState = signal<ReturnType<ExplanationsStore['augment']> | null>(null);
+  private readonly _augmentState = signal<ReturnType<ExplanationsStore['augment']> | null>(null);
+
+  protected readonly displayAugment = computed<{
+    loading: Signal<boolean>;
+    result: Signal<AugmentResponse | null>;
+    error: Signal<string | null>;
+  } | null>(() => {
+    const running = this._augmentState();
+    if (running) return running;
+    const cached =
+      this.store.persisted().find((r) => r.id === this.record().id)?.augmented_result ??
+      this.record().augmented_result;
+    if (!cached) return null;
+    return { loading: signal(false), result: signal(cached), error: signal(null) };
+  });
+
+  protected readonly staticFalse = signal(false);
+  protected readonly staticNull = signal(null);
 
   protected runAugment(): void {
-    this.augmentState.set(this.store.augment(this.record().id));
+    this._augmentState.set(this.store.augment(this.record().id));
   }
 
   protected onFeedback(feedback: ExplanationFeedback): void {

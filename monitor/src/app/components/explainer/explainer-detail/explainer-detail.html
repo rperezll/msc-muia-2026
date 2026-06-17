@@ -235,30 +235,24 @@
     }
 
     @if (activeTab() === 3) {
-      @if (!augmentState()) {
-        <div class="flex flex-col items-center gap-4 py-8 text-center">
-          <svg lucideSparkles [size]="40" [strokeWidth]="1.5" class="text-neutral-400"></svg>
-          <div class="flex flex-col gap-1.5">
-            <p class="text-sm font-semibold text-neutral-100">Augment with Knowledge Base</p>
-            <p class="text-xs text-neutral-400">
-              Enrich the explanation by searching the documentary knowledge base.
-            </p>
-          </div>
-          <button
-            type="button"
-            (click)="runAugment()"
-            class="cursor-pointer rounded-md border border-border-default bg-surface-overlay px-3 py-1.5 text-sm font-medium text-neutral-100 transition-colors hover:border-neutral-400"
-          >
-            Augment
-          </button>
-        </div>
-      } @else {
+      <div class="flex flex-col gap-4">
         <app-augment-panel
-          [loading]="augmentState()!.loading"
-          [result]="augmentState()!.result"
-          [error]="augmentState()!.error"
+          [loading]="displayAugment()?.loading ?? staticFalse"
+          [result]="displayAugment()?.result ?? staticNull"
+          [error]="displayAugment()?.error ?? staticNull"
         />
-      }
+        @if (!displayAugment()) {
+          <div class="flex justify-center">
+            <button
+              type="button"
+              (click)="runAugment()"
+              class="cursor-pointer rounded-md border border-border-default bg-surface-overlay px-4 py-1.5 text-sm font-medium text-neutral-100 transition-colors hover:border-neutral-400"
+            >
+              Augment
+            </button>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>
