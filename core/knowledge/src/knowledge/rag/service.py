@@ -10,7 +10,8 @@ _AUGMENT_SYSTEM = (
     "You are an expert in photovoltaic solar systems. "
     "You receive an anomaly summary and relevant technical documentation. "
     "Generate a technically grounded, augmented explanation based on the documentation. "
-    "If no documentation is available, reason solely from the summary."
+    "If no documentation is available, reason solely from the summary. "
+    "Respond in plain prose only: no markdown, no bullet points, no headers, no bold or italic."
 )
 
 

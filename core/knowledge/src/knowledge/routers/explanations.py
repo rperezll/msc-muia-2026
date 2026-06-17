@@ -84,4 +84,6 @@ def augment_explanation(explanation_id: str, repo: RepoDep, rag: RagDep) -> Augm
     if not rag_queries:
         raise HTTPException(status_code=422, detail="Explanation has no RAG queries")
 
-    return rag.augment(summary=summary, rag_queries=rag_queries)
+    result = rag.augment(summary=summary, rag_queries=rag_queries)
+    repo.save_augmented(explanation_id, result)
+    return result
