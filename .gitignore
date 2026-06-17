@@ -15,3 +15,5 @@ dist
 core/logs/audit_rlm.jsonl
 core/logs/audit_single_pass.jsonl
 core/logs/audit.jsonl
+
+mocks/knowledge/*.pdf
