@@ -2,14 +2,15 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 -- Explicaciones generadas por el Explainer
 CREATE TABLE explanations (
-    id          TEXT PRIMARY KEY,
-    source_key  TEXT NOT NULL,
-    result      JSONB NOT NULL,
-    report      JSONB,
-    duration_ms INTEGER,
-    feedback    TEXT CHECK (feedback IN ('up', 'down')),
-    feedback_at TIMESTAMPTZ,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                TEXT PRIMARY KEY,
+    source_key        TEXT NOT NULL,
+    result            JSONB NOT NULL,
+    report            JSONB,
+    duration_ms       INTEGER,
+    feedback          TEXT CHECK (feedback IN ('up', 'down')),
+    feedback_at       TIMESTAMPTZ,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    augmented_result  JSONB
 );
 
 CREATE INDEX ON explanations (source_key);
