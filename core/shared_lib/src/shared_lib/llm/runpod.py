@@ -85,3 +85,6 @@ class Runpod(BaseLLM):
             return schema.model_validate_json(content), usage
         except requests.exceptions.RequestException as e:
             raise Exception(f"Fallo al conectar con RunPod en {self.base_url}. Error: {e}") from e
+
+    def embed(self, texts: list[str], model: str) -> list[float]:
+        raise NotImplementedError("RunPod no soporta embeddings")

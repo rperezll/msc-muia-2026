@@ -60,3 +60,15 @@ class Ollama(BaseLLM):
             return schema.model_validate_json(content), _parse_ollama_usage(data)
         except requests.exceptions.RequestException as e:
             raise Exception(f"Fallo al conectar con Ollama en {self.base_url}. Error: {e}") from e
+
+    def embed(self, texts: list[str], model: str) -> list[float]:
+        try:
+            response = requests.post(
+                f"{self.base_url}/api/embed", json={"model": model, "input": texts}
+            )
+            response.raise_for_status()
+            embeddings = response.json()["embeddings"]
+            n = len(embeddings)
+            return [sum(e[i] for e in embeddings) / n for i in range(len(embeddings[0]))]
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Fallo al conectar con Ollama en {self.base_url}. Error: {e}") from e

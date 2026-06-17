@@ -52,3 +52,9 @@ class OpenAI(BaseLLM):
             **kwargs,
         )
         return response.choices[0].message.parsed, _extract_usage(response.usage)
+
+    def embed(self, texts: list[str], model: str) -> list[float]:
+        response = self.client.embeddings.create(model=model, input=texts)
+        embeddings = [item.embedding for item in response.data]
+        n = len(embeddings)
+        return [sum(e[i] for e in embeddings) / n for i in range(len(embeddings[0]))]

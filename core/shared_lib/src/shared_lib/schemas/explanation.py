@@ -3,6 +3,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from shared_lib.schemas.rag import AugmentResponse
+
 
 class ExplanationFilters(BaseModel):
     source_key: str | None = None
@@ -21,6 +23,7 @@ class ExplanationRecord(BaseModel):
     feedback: str | None = None
     feedback_at: datetime | None = None
     created_at: datetime | None = None
+    augmented_result: AugmentResponse | None = None
 
 
 class ExplanationListResponse(BaseModel):

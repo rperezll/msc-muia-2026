@@ -7,6 +7,7 @@ from psycopg.types.json import Jsonb
 
 from shared_lib.logger import get_logger
 from shared_lib.schemas.explanation import ExplanationFilters, ExplanationRecord
+from shared_lib.schemas.rag import AugmentResponse
 
 if TYPE_CHECKING:
     from shared_lib.db.postgres import PostgresTransport
@@ -21,13 +22,14 @@ _INSERT = """
 """
 
 _SELECT_BASE = """
-    SELECT id, source_key, result, report, duration_ms, feedback, feedback_at, created_at
+    SELECT id, source_key, result, report, duration_ms, feedback, feedback_at, created_at,
+           augmented_result
     FROM explanations
 """
 
 
 def _row_to_record(row: tuple) -> ExplanationRecord:
-    id_, source_key, result, report, duration_ms, feedback, feedback_at, created_at = row
+    id_, source_key, result, report, duration_ms, feedback, feedback_at, created_at, augmented_result = row
     return ExplanationRecord(
         id=id_,
         source_key=source_key,
@@ -37,6 +39,7 @@ def _row_to_record(row: tuple) -> ExplanationRecord:
         feedback=feedback,
         feedback_at=feedback_at,
         created_at=created_at,
+        augmented_result=AugmentResponse.model_validate(augmented_result) if augmented_result else None,
     )
 
 
@@ -132,3 +135,8 @@ class ExplanationRepository:
         with self._transport.cursor() as cur:
             cur.execute(sql, (feedback, feedback, explanation_id))
         return self.get(explanation_id)
+
+    def save_augmented(self, explanation_id: str, augmented: AugmentResponse) -> None:
+        sql = "UPDATE explanations SET augmented_result = %s WHERE id = %s"
+        with self._transport.cursor() as cur:
+            cur.execute(sql, (Jsonb(augmented.model_dump(mode="json")), explanation_id))

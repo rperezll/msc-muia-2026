@@ -29,3 +29,8 @@ class BaseLLM(ABC):
     ) -> tuple[T, dict[str, int]]:
         """LLM con structured output + usage"""
         ...
+
+    @abstractmethod
+    def embed(self, texts: list[str], model: str) -> list[float]:
+        """Embedding medio de texts usando el modelo indicado"""
+        ...
