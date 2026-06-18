@@ -21,5 +21,5 @@ def create_llm(
     if p == "runpod":
         if not runpod_url:
             raise ValueError("Se requiere 'runpod_url' para el proveedor RunPod")
-        return Runpod(model=model, base_url=runpod_url)
+        return Runpod(model=model, base_url=runpod_url, api_key=api_key)
     raise ValueError(f"Proveedor LLM no soportado: '{p}'")
