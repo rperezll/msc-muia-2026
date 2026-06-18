@@ -1,3 +1,4 @@
+import os
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
@@ -14,13 +15,13 @@ class LlmProvider(StrEnum):
 
 
 def _find_core_root() -> Path:
-    """Busca la raíz de core/ subiendo hasta encontrar config.yml"""
+    """Busca la raíz de core/ para obtener config.yml"""
     current = Path(__file__).resolve().parent
     for _ in range(10):
         if (current / "config.yml").exists():
             return current
         current = current.parent
-    raise FileNotFoundError("No se encontró config.yml en ningún directorio padre")
+    raise FileNotFoundError("No se encontró config.yml en ningún directorio")
 
 
 CORE_ROOT = _find_core_root()
@@ -127,6 +128,28 @@ class AppConfig(BaseModel):
     mcp_servers: list[McpServerConfig]
 
 
+# Útil para deploy con docker
+_ENV_HOST_OVERRIDES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("POSTGRES_HOST", ("services", "postgres", "host")),
+    ("RABBITMQ_HOST", ("services", "rabbitmq", "host")),
+    ("MQTT_HOST", ("services", "mqtt", "host")),
+    ("KNOWLEDGE_HOST", ("knowledge", "host")),
+)
+
+
+def _apply_env_overrides(config_dict: dict) -> dict:
+    """Sobrescribe hosts para construcción con docker"""
+    for env_var, path in _ENV_HOST_OVERRIDES:
+        value = os.getenv(env_var)
+        if not value:
+            continue
+        node = config_dict
+        for key in path[:-1]:
+            node = node.setdefault(key, {})
+        node[path[-1]] = value
+    return config_dict
+
+
 @lru_cache(maxsize=1)
 def get_config() -> AppConfig:
     """Lee el YAML, lo parsea y devuelve el modelo validado"""
@@ -138,7 +161,7 @@ def get_config() -> AppConfig:
     with open(CONFIG_FILE_PATH, encoding="utf-8") as f:
         config_dict = yaml.safe_load(f) or {}
 
-    return AppConfig(**config_dict)
+    return AppConfig(**_apply_env_overrides(config_dict))
 
 
 config = get_config()

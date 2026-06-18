@@ -1,4 +1,5 @@
 services:
+
   mosquitto:
     image: eclipse-mosquitto:2
     container_name: mqtt_broker
@@ -6,8 +7,13 @@ services:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./services/mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: always
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -19,6 +25,11 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   postgres:
     image: pgvector/pgvector:pg16
@@ -30,9 +41,14 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./services/migrations:/docker-entrypoint-initdb.d:ro
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:

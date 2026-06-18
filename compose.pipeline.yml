@@ -1,0 +1,99 @@
+services:
+
+  knowledge:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    container_name: knowledge_api
+    command: ["knowledge"]
+    environment:
+      KNOWLEDGE_HOST: 0.0.0.0
+      POSTGRES_HOST: postgres
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./core/config.yml:/app/config.yml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/docs')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  simulator:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    container_name: simulator
+    command: ["simulator"]
+    environment:
+      MQTT_HOST: mosquitto
+    volumes:
+      - ./core/config.yml:/app/config.yml:ro
+      - ./mocks:/mocks:ro
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    restart: on-failure
+
+  detector:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    container_name: detector
+    command: ["detector"]
+    environment:
+      MQTT_HOST: mosquitto
+      RABBITMQ_HOST: rabbitmq
+    volumes:
+      - ./core/config.yml:/app/config.yml:ro
+      - ./models:/models:ro
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+
+  explainer:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    container_name: explainer
+    command: ["explainer"]
+    environment:
+      MQTT_HOST: mosquitto
+      RABBITMQ_HOST: rabbitmq
+      POSTGRES_HOST: postgres
+    volumes:
+      - ./core/config.yml:/app/config.yml:ro
+      - explainer_logs:/app/logs
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      knowledge:
+        condition: service_started
+    restart: on-failure
+
+  monitor:
+    build:
+      context: ./monitor
+      dockerfile: Dockerfile
+    container_name: monitor
+    ports:
+      - "80:80"
+    depends_on:
+      knowledge:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  explainer_logs:
