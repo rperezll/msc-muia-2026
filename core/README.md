@@ -38,9 +38,35 @@ Requiere los artefactos entrenados en `models/keras/plant_{1,2}/` (`config_solar
 
 Consume telemetría de `telemetry/solar`, publica reportes de anomalía en `detector/anomaly` (MQTT) y los encola en RabbitMQ (`anomalies`) para que el explainer los procese.
 
+## Explainer
+
+```bash
+uv run explainer
+```
+
+Consume anomalías de RabbitMQ (`anomalies`), genera la explicación con el LLM configurado y la persiste en Postgres.
+
+## Knowledge
+
+```bash
+uv run knowledge
+```
+
+Servicio de recuperación (RAG) sobre la base vectorial. Expone su API en el `host`/`port` del bloque `knowledge` de `config.yml`.
+
 ## Tests
 
 ```bash
 uv run --package simulator pytest simulator/tests/ -v
 uv run --package detector pytest detector/tests/ -v
+uv run --package explainer pytest explainer/tests/ -v
+uv run --package knowledge pytest knowledge/tests/ -v
+```
+
+## Pipeline completo
+
+Arranca todos los servicios del core a la vez:
+
+```bash
+uv run run_pipeline.py
 ```

@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=./config.schema.json
+
+log_level: WARNING
+
+services:
+  mqtt:
+    host: localhost
+    port: 1883
+  rabbitmq:
+    host: localhost
+    port: 5672
+    user: broker
+    password: <rabbitmq-password>
+  postgres:
+    host: localhost
+    port: 5432
+    user: postgres
+    password: <postgres-password>
+    database: muia
+
+simulator:
+  csv_file_path: "../mocks/dataset_prod.csv"
+  # Segundos entre instantes de muestreo
+  publish_delay: 2.0
+  # Segundos entre inversores del mismo instante
+  burst_delay: 0.1
+
+detector:
+  anomaly_buffer_max: 3
+  lstm_threshold_key: threshold
+
+explainer:
+  temperature: 0.3
+
+  llm_provider: openai
+  target_model: gpt-4o-mini
+  api_key: <tu-openai-api-key>
+
+  # RunPod (serverless openai-friendly)
+  # llm_provider: runpod
+  # target_model: gemma4:e4b
+  # runpod_url: https://api.runpod.ai/v2/<endpoint_id>
+  # api_key: <runpod-api-key>
+
+  # Ollama local
+  # llm_provider: ollama
+  # target_model: gemma4:e4b
+
+knowledge:
+  host: localhost
+  port: 8080
+  default_page_size: 20
+  max_page_size: 100
+
+rag:
+  api_key: <openai-api-key>
+  llm_model: gpt-4o-mini
+  embedding_model: text-embedding-3-small
+  temperature: 0.2
+  top_k: 5

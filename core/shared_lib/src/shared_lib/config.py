@@ -84,20 +84,6 @@ class ExplainerConfig(BaseModel):
     audit_path: str = "logs/audit.jsonl"
 
 
-class McpServerConfig(BaseModel):
-    name: str
-    embedder_provider: LlmProvider = LlmProvider.OLLAMA
-    embedder_model: str = "nomic-embed-text"
-    embedder_api_key: str | None = None
-    embedder_base_url: str | None = None
-    lancedb_path: str = "data/lancedb"
-    rag_top_k: int = Field(default=5, ge=1)
-    host: str = "localhost"
-    port: int = 8000
-    chunk_size: int = Field(default=512, ge=1)
-    chunk_overlap: int = Field(default=64, ge=0)
-
-
 class KnowledgeConfig(BaseModel):
     host: str = "localhost"
     port: int = 8080
@@ -125,7 +111,6 @@ class AppConfig(BaseModel):
     explainer: ExplainerConfig
     knowledge: KnowledgeConfig = Field(default_factory=KnowledgeConfig)
     rag: RagConfig = Field(default_factory=RagConfig)
-    mcp_servers: list[McpServerConfig]
 
 
 # Útil para deploy con docker

@@ -82,6 +82,35 @@
       "title": "ExplainerConfig",
       "type": "object"
     },
+    "KnowledgeConfig": {
+      "properties": {
+        "host": {
+          "default": "localhost",
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "default": 8080,
+          "title": "Port",
+          "type": "integer"
+        },
+        "default_page_size": {
+          "default": 20,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Default Page Size",
+          "type": "integer"
+        },
+        "max_page_size": {
+          "default": 100,
+          "minimum": 1,
+          "title": "Max Page Size",
+          "type": "integer"
+        }
+      },
+      "title": "KnowledgeConfig",
+      "type": "object"
+    },
     "LlmProvider": {
       "enum": [
         "openai",
@@ -90,85 +119,6 @@
       ],
       "title": "LlmProvider",
       "type": "string"
-    },
-    "McpServerConfig": {
-      "properties": {
-        "name": {
-          "title": "Name",
-          "type": "string"
-        },
-        "embedder_provider": {
-          "$ref": "#/$defs/LlmProvider",
-          "default": "ollama"
-        },
-        "embedder_model": {
-          "default": "nomic-embed-text",
-          "title": "Embedder Model",
-          "type": "string"
-        },
-        "embedder_api_key": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Embedder Api Key"
-        },
-        "embedder_base_url": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Embedder Base Url"
-        },
-        "lancedb_path": {
-          "default": "data/lancedb",
-          "title": "Lancedb Path",
-          "type": "string"
-        },
-        "rag_top_k": {
-          "default": 5,
-          "minimum": 1,
-          "title": "Rag Top K",
-          "type": "integer"
-        },
-        "host": {
-          "default": "localhost",
-          "title": "Host",
-          "type": "string"
-        },
-        "port": {
-          "default": 8000,
-          "title": "Port",
-          "type": "integer"
-        },
-        "chunk_size": {
-          "default": 512,
-          "minimum": 1,
-          "title": "Chunk Size",
-          "type": "integer"
-        },
-        "chunk_overlap": {
-          "default": 64,
-          "minimum": 0,
-          "title": "Chunk Overlap",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "title": "McpServerConfig",
-      "type": "object"
     },
     "MqttServiceConfig": {
       "properties": {
@@ -241,6 +191,47 @@
         }
       },
       "title": "RabbitMQServiceConfig",
+      "type": "object"
+    },
+    "RagConfig": {
+      "properties": {
+        "api_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Api Key"
+        },
+        "llm_model": {
+          "default": "gpt-4o-mini",
+          "title": "Llm Model",
+          "type": "string"
+        },
+        "embedding_model": {
+          "default": "text-embedding-3-small",
+          "title": "Embedding Model",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.2,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "top_k": {
+          "default": 5,
+          "minimum": 1,
+          "title": "Top K",
+          "type": "integer"
+        }
+      },
+      "title": "RagConfig",
       "type": "object"
     },
     "ServicesConfig": {
@@ -323,20 +314,18 @@
     "explainer": {
       "$ref": "#/$defs/ExplainerConfig"
     },
-    "mcp_servers": {
-      "items": {
-        "$ref": "#/$defs/McpServerConfig"
-      },
-      "title": "Mcp Servers",
-      "type": "array"
+    "knowledge": {
+      "$ref": "#/$defs/KnowledgeConfig"
+    },
+    "rag": {
+      "$ref": "#/$defs/RagConfig"
     }
   },
   "required": [
     "services",
     "simulator",
     "detector",
-    "explainer",
-    "mcp_servers"
+    "explainer"
   ],
   "title": "AppConfig",
   "type": "object"
