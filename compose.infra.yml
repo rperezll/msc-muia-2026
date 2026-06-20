@@ -7,7 +7,7 @@ services:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      - ./services/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./infra/mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: always
     healthcheck:
       test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
@@ -22,8 +22,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-admin}
     restart: always
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
@@ -37,15 +37,15 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASS}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-muia}
     volumes:
-      - ./services/migrations:/docker-entrypoint-initdb.d:ro
+      - ./infra/migrations:/docker-entrypoint-initdb.d:ro
       - postgres_data:/var/lib/postgresql/data
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-muia}"]
       interval: 10s
       timeout: 5s
       retries: 10
