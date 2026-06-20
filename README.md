@@ -10,6 +10,8 @@
     <source media="(prefers-color-scheme: light)" srcset="assets/fig-09_dashboard_full-run-light.png">
     <img alt="msc-muia-2026" src="assets/fig-09_dashboard_full-run.png" width="420" style="border-radius: 12px;">
   </picture>
+  <br/>
+  <a href="assets/live-demo.mp4">Ver demo de la plataforma</a>
 </div>
 
 ### Descripción
