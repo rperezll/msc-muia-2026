@@ -10,22 +10,31 @@ import { EmbeddingCanvasComponent } from '../embedding-canvas/embedding-canvas';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe, LucideFileText, LucideSparkles, EmbeddingCanvasComponent],
   template: `
-    <div class="grid transition-[grid-template-rows] duration-500 ease-in-out" [style.grid-template-rows]="result()() || error()() ? '0fr' : '1fr'">
-      <!-- fila colapsable: canvas idle/loading -->
+    <div
+      class="grid transition-[grid-template-rows] duration-500 ease-in-out"
+      [style.grid-template-rows]="result()() || error()() ? '0fr' : '1fr'"
+    >
       <div class="overflow-hidden">
         <div class="relative h-52 w-full overflow-hidden rounded-md">
           <app-embedding-canvas [loading]="loading()()" class="absolute inset-0 h-full w-full" />
-          <div class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-6 text-center">
+          <div
+            class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-6 text-center"
+          >
             @if (!loading()()) {
-              <svg lucideSparkles [size]="32" [strokeWidth]="1.5" class="text-neutral-300 filter-[drop-shadow(0_1px_6px_rgba(0,0,0,0.9))] animate-[fade-in-up_0.2s_ease-out]"></svg>
-              <p class="text-sm font-semibold text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.9)] animate-[fade-in-up_0.2s_ease-out]">
+              <svg
+                lucideSparkles
+                [size]="32"
+                [strokeWidth]="1.5"
+                class="text-neutral-300 animate-[fade-in-up_0.2s_ease-out]"
+              ></svg>
+              <p class="text-sm font-semibold text-neutral-100 animate-[fade-in-up_0.2s_ease-out]">
                 Augment with Knowledge Base
               </p>
-              <p class="text-xs text-neutral-300 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)] animate-[fade-in-up_0.2s_ease-out]">
+              <p class="text-xs text-neutral-300 animate-[fade-in-up_0.2s_ease-out]">
                 Search the documentary knowledge base to enrich this explanation.
               </p>
             } @else {
-              <p class="text-sm font-semibold text-neutral-300 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)] animate-[fade-in-up_0.2s_ease-out]">
+              <p class="text-sm font-semibold text-neutral-300 animate-[fade-in-up_0.2s_ease-out]">
                 Augmenting…
               </p>
             }
@@ -35,7 +44,9 @@ import { EmbeddingCanvasComponent } from '../embedding-canvas/embedding-canvas';
     </div>
 
     @if (error()()) {
-      <div class="rounded-md border border-status-error/20 bg-status-error/5 p-3 animate-[fade-in-up_0.3s_ease-out]">
+      <div
+        class="rounded-md border border-status-error/20 bg-status-error/5 p-3 animate-[fade-in-up_0.3s_ease-out]"
+      >
         <p class="text-sm text-status-error">{{ error()() }}</p>
       </div>
     } @else if (result()()) {
@@ -56,7 +67,9 @@ import { EmbeddingCanvasComponent } from '../embedding-canvas/embedding-canvas';
             </p>
             <ul class="flex flex-col gap-1.5">
               @for (doc of result()()!.retrieved; track $index) {
-                <li class="overflow-hidden rounded-md border border-border-default bg-surface-overlay">
+                <li
+                  class="overflow-hidden rounded-md border border-border-default bg-surface-overlay"
+                >
                   <button
                     type="button"
                     (click)="toggleDoc($index)"

@@ -8,6 +8,7 @@ import {
   type SimulatorState,
   type SolarTelemetryPayload,
 } from '../../core/contracts';
+import { RabbitmqApiService } from '../rabbitmq/rabbitmq-api.service';
 
 const MQTT_WS_URL = 'ws://localhost:9001';
 const MAX_ANOMALIES = 200;
@@ -18,6 +19,7 @@ const MSG_RATE_WINDOW_MS = 60_000;
 export class MqttService {
   private client: MqttClient | null = null;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly rabbitmq = inject(RabbitmqApiService);
 
   readonly connected = signal(false);
   readonly telemetryMap = signal<Map<string, SolarTelemetryPayload>>(new Map());
@@ -105,6 +107,7 @@ export class MqttService {
       case MQTT_TOPICS.JOB_EVENT: {
         const event: JobEvent = JSON.parse(raw);
         this.jobEvents.update((list) => [event, ...list].slice(0, MAX_JOB_EVENTS));
+        this.rabbitmq.refresh();
         break;
       }
     }

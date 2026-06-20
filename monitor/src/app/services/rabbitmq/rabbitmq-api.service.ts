@@ -34,6 +34,10 @@ export class RabbitmqApiService {
     this.intervalId = setInterval(() => this.fetchStats(), POLL_INTERVAL);
   }
 
+  refresh(): void {
+    this.fetchStats();
+  }
+
   private fetchStats(): void {
     this.http
       .get<RabbitMqQueueStats>(`${RABBITMQ_API}/queues/%2F/${QUEUE_NAME}`, {

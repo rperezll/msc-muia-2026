@@ -122,6 +122,9 @@ export class EmbeddingCanvasComponent implements OnDestroy {
 
     ctx.clearRect(0, 0, W, H);
 
+    const isLight = document.documentElement.classList.contains('light');
+    const rgb = isLight ? '60,60,60' : '180,180,180';
+
     for (let i = 0; i < proj.length; i++) {
       for (let j = i + 1; j < proj.length; j++) {
         const a = proj[i];
@@ -133,9 +136,9 @@ export class EmbeddingCanvasComponent implements OnDestroy {
         if (d < LINK3D) {
           const nearness = 1 - d / LINK3D;
           const avgDepth = (a.depth + b.depth) / 2;
-          const lineBase = this.loading() ? 0.22 : 0.015;
+          const lineBase = this.loading() ? 0.22 : isLight ? 0.025 : 0.015;
           const alpha = nearness * (lineBase + avgDepth * lineBase);
-          ctx.strokeStyle = `rgba(180,180,180,${alpha})`;
+          ctx.strokeStyle = `rgba(${rgb},${alpha})`;
           ctx.lineWidth = 0.6;
           ctx.beginPath();
           ctx.moveTo(a.px, a.py);
@@ -145,12 +148,12 @@ export class EmbeddingCanvasComponent implements OnDestroy {
       }
     }
 
-    const baseAlpha = this.loading() ? 1.0 : 0.06;
+    const baseAlpha = this.loading() ? 1.0 : isLight ? 0.09 : 0.06;
     const sorted = [...proj].sort((a, b) => a.depth - b.depth);
     for (const p of sorted) {
       const alpha = baseAlpha * (0.25 + p.depth * 0.75);
       const r = p.r * (0.6 + p.depth * 0.6) * p.scale;
-      ctx.fillStyle = `rgba(190,190,190,${alpha})`;
+      ctx.fillStyle = `rgba(${rgb},${alpha})`;
       ctx.beginPath();
       ctx.arc(p.px, p.py, r, 0, Math.PI * 2);
       ctx.fill();
