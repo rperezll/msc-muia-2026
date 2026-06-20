@@ -34,7 +34,7 @@ explainer:
 
   llm_provider: openai
   target_model: gpt-4o-mini
-  api_key: <tu-openai-api-key>
+  api_key: <openai-api-key>
 
   # RunPod (serverless openai-friendly)
   # llm_provider: runpod

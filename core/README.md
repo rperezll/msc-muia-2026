@@ -1,6 +1,8 @@
 # msc-muia-2026 - Core
 
-> Todas las instrucciones se realizan sobre `core/`
+> **Importante:** Es necesario levantar la infraestructura previamente para trabajar con los proyectos de `core/`. Ejecuta `docker compose -f compose.infra.yml up -d` en la raíz del repositorio.
+
+> Todas las instrucciones siguientes se realizan sobre `core/`
 
 ```bash
 uv sync
